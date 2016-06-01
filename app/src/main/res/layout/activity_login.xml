@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.ljh.www.saysayim.widget.ClearableEditViewWithIcon
+                android:id="@+id/et_account"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:drawablePadding="8dp"
+                android:layout_marginTop="100dp"
+                android:background="@drawable/edittext_white_normal"
+
+                android:textCursorDrawable="@null"
+                tools:text="account" />
+
+            <com.ljh.www.saysayim.widget.ClearableEditViewWithIcon
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:drawablePadding="8dp"
+                android:background="@drawable/edittext_white_normal"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:textCursorDrawable="@null"
+                tools:hint="password" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
