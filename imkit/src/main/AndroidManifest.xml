@@ -2,11 +2,6 @@
     package="com.ljh.www.imkit">
 
     <application>
-        <activity
-            android:name=".BaseActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
 
     </application>
 

@@ -6,6 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/app_bg</item>
+        <item name="android:popupMenuStyle">@style/PopMenuStyle</item>
     </style>
 
     <style name="NoActionBarFullscreen" parent="Theme.AppCompat.Light.NoActionBar">
@@ -15,5 +19,10 @@
 
     <style name="WelcomeEntranceTheme" parent="NoActionBarFullscreen">
         <item name="android:windowBackground">@mipmap/welcome_bg</item>
+    </style>
+
+    <style name="PopMenuStyle" parent="@style/Widget.AppCompat.Light.PopupMenu">
+        <item name="android:popupBackground">@drawable/actionbar_dropdown_bg</item>
+        <item name="android:background">@color/white</item>
     </style>
 </resources>

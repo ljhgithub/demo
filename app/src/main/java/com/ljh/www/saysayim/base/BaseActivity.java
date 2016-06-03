@@ -1,7 +1,8 @@
-package com.ljh.www.imkit;
+package com.ljh.www.saysayim.base;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.databinding.ViewDataBinding;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,9 +12,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import com.ljh.www.imkit.util.log.LogUtils;
 import com.ljh.www.imkit.util.sys.ReflectionUtil;
+import com.ljh.www.saysayim.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,29 +24,117 @@ import java.util.List;
 /**
  * Created by ljh on 2016/5/25.
  */
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity<VM extends ViewModel, B extends ViewDataBinding> extends AppCompatActivity {
 
     private static final String TAG = LogUtils.makeLogTag(BaseActivity.class.getSimpleName());
     public static Handler mHandler;
     private boolean destroyed = false;
+    private B binding;
+    private VM viewModel;
+    private TextView tvTitle;
+    private TextView tvOption;
+    protected boolean hasTitleBar = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
         destroyed = false;
-        LogUtils.LOGD(TAG, "activity: " + getClass().getSimpleName() + " onCreate()");
+//        LogUtils.LOGD(TAG, "activity: " + getClass().getSimpleName() + " onCreate()");
+    }
+
+    public void setHasTitleBar(boolean hasTitleBar) {
+        this.hasTitleBar = hasTitleBar;
+    }
+
+    public boolean getHasTitleBar() {
+        return this.hasTitleBar;
+    }
+
+    public TextView getTvTitle() {
+        return tvTitle;
+    }
+
+    public TextView getTvOption() {
+        return tvOption;
+    }
+
+    public void setBinding(B b) {
+        this.binding = b;
+        if (hasTitleBar) {
+            setTitleLayout();
+        }
+    }
+
+    public B getBinging() {
+        if (binding == null) {
+            throw new NullPointerException("You should setBinding first!");
+        }
+        return binding;
+    }
+
+    public void setTitleLayout() {
+        binding.getRoot().findViewById(R.id.tv_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goBack();
+            }
+        });
+        tvTitle = (TextView) binding.getRoot().findViewById(R.id.tv_title);
+        tvOption = (TextView) binding.getRoot().findViewById(R.id.tv_option);
+        tvOption.setText("");
+        tvOption.setVisibility(View.GONE);
+        tvTitle.setText("");
+        tvOption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doOption();
+            }
+        });
+    }
+
+    public void goBack() {
+        if (!isDestroyed()) {
+            finish();
+        }
+
+    }
+
+    public void doOption() {
+
+    }
+
+    public void setViewModel(VM viewModel) {
+        this.viewModel = viewModel;
+    }
+
+    public VM getViewModel() {
+        if (viewModel == null) {
+            throw new NullPointerException("You should setViewModel first!");
+        }
+        return viewModel;
     }
 
     public boolean isDestroyed() {
         return this.destroyed;
     }
 
+    public void setTitleName(String titleName) {
+        tvTitle.setText(titleName);
+    }
+
+    public void setTitleName(int id) {
+        tvTitle.setText(id);
+    }
+
+    public String getTitleName() {
+        return tvTitle.getText().toString();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         destroyed = true;
-        LogUtils.LOGD(TAG, "activity: " + getClass().getSimpleName() + " onDestroy()");
+//        LogUtils.LOGD(TAG, "activity: " + getClass().getSimpleName() + " onDestroy()");
     }
 
     protected final Handler getHandler() {

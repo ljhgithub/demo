@@ -1,6 +1,6 @@
 package com.ljh.www.saysayim.main.model;
 
-import com.ljh.www.imkit.TabBaseFragment;
+import com.ljh.www.saysayim.base.TabBaseFragment;
 import com.ljh.www.saysayim.main.fragment.ContactFragment;
 import com.ljh.www.saysayim.main.fragment.RecentContactFragment;
 

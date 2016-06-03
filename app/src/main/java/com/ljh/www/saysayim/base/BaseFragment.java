@@ -1,7 +1,8 @@
-package com.ljh.www.imkit;
+package com.ljh.www.saysayim.base;
 
 import android.app.Activity;
 import android.content.Context;
+import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -14,10 +15,12 @@ import com.ljh.www.imkit.util.log.LogUtils;
 /**
  * Created by ljh on 2016/5/25.
  */
-public class BaseFragment extends Fragment {
+public abstract class BaseFragment<VM extends ViewModel,B extends ViewDataBinding> extends Fragment {
     private static final String TAG = LogUtils.makeLogTag(BaseActivity.class.getSimpleName());
     private static Handler mHandler = new Handler();
 
+    private B binding;
+    private VM viewModel;
     private int containerId;
     private boolean destroy = false;
 
@@ -25,6 +28,27 @@ public class BaseFragment extends Fragment {
         this.containerId=containerId;
     }
 
+    public void setBinding(B b) {
+        this.binding = b;
+    }
+
+    public B getBinging() {
+        if (binding == null) {
+            throw new NullPointerException("You should setBinding first!");
+        }
+        return binding;
+    }
+
+    public void setViewModel(VM viewModel){
+        this.viewModel=viewModel;
+    }
+
+    public VM getViewModel(){
+        if (null==viewModel){
+            throw new NullPointerException("You should setViewModel first!");
+        }
+        return this.viewModel;
+    }
     public int getContainerId(){
         return containerId;
     }
@@ -32,14 +56,14 @@ public class BaseFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         destroy = false;
-        LogUtils.LOGD(TAG, "Fragment: " + getClass().getSimpleName() + " onActivityCreated()");
+//        LogUtils.LOGD(TAG, "Fragment: " + getClass().getSimpleName() + " onActivityCreated()");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         destroy = true;
-        LogUtils.LOGD(TAG, "Fragment: " + getClass().getSimpleName() + " onCreate()");
+//        LogUtils.LOGD(TAG, "Fragment: " + getClass().getSimpleName() + " onCreate()");
     }
 
     protected Handler getHandler() {

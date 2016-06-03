@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data class=".FriendSearchBinding">
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/title"
+            layout="@layout/title_layout" />
+
+        <com.ljh.www.saysayim.widget.ClearableEditViewWithIcon
+            android:id="@+id/et_search_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edit_text_blue_bg"
+            android:hint="搜索"
+            android:imeOptions="actionGo"
+            android:inputType="text"
+            android:padding="5dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:textColor="@color/edit_text_black"
+            android:textColorHint="@color/edit_text_black_hint" />
+    </RelativeLayout>
+</layout>

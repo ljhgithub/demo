@@ -4,9 +4,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.ljh.www.imkit.BaseFragment;
-import com.ljh.www.imkit.TabBaseFragment;
-import com.ljh.www.saysayim.main.model.MainTab;
+import com.ljh.www.saysayim.base.BaseFragment;
+import com.ljh.www.saysayim.base.TabBaseFragment;
 
 
 /**

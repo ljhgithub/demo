@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ljh.www.imkit.TabBaseFragment;
+import com.ljh.www.saysayim.base.TabBaseFragment;
 import com.ljh.www.imkit.util.log.LogUtils;
 import com.ljh.www.saysayim.R;
 

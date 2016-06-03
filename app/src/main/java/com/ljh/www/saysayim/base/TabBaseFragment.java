@@ -1,9 +1,11 @@
-package com.ljh.www.imkit;
+package com.ljh.www.saysayim.base;
+
+import android.databinding.ViewDataBinding;
 
 /**
  * Created by ljh on 2016/5/31.
  */
-public class TabBaseFragment extends BaseFragment {
+public class TabBaseFragment<VM extends ViewModel, B extends ViewDataBinding> extends BaseFragment<VM, B> {
 
     public interface State {
         boolean isCurrent(TabBaseFragment tabFragment);
@@ -23,6 +25,7 @@ public class TabBaseFragment extends BaseFragment {
     public void onCurrent() {
 
     }
+
 
     //离开当前页
     public void onLeave() {
