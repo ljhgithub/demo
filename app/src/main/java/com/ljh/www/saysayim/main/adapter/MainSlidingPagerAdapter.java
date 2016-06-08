@@ -2,7 +2,7 @@ package com.ljh.www.saysayim.main.adapter;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import com.ljh.www.saysayim.base.TabBaseFragment;
+import com.ljh.www.saysayim.common.fragment.TabBaseFragment;
 import com.ljh.www.saysayim.main.model.MainTab;
 import com.ljh.www.saysayim.viewpager.SlidingPagerAdapter;
 

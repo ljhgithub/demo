@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ljh.www.saysayim.ContactBinding;
-import com.ljh.www.saysayim.base.TabBaseFragment;
+import com.ljh.www.saysayim.common.fragment.TabBaseFragment;
 import com.ljh.www.imkit.util.log.LogUtils;
 import com.ljh.www.saysayim.R;
-import com.ljh.www.saysayim.base.ViewModel;
+import com.ljh.www.saysayim.common.viewmode.ViewModel;
 import com.ljh.www.saysayim.main.adapter.ContactAdapter;
 
 /**

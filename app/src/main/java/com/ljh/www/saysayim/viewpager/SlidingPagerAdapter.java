@@ -4,8 +4,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.ljh.www.saysayim.base.BaseFragment;
-import com.ljh.www.saysayim.base.TabBaseFragment;
+import com.ljh.www.saysayim.common.fragment.BaseFragment;
+import com.ljh.www.saysayim.common.fragment.TabBaseFragment;
 
 
 /**

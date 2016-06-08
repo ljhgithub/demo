@@ -1,4 +1,4 @@
-package com.ljh.www.saysayim.base;
+package com.ljh.www.saysayim.common.fragment;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.ljh.www.imkit.util.log.LogUtils;
+import com.ljh.www.saysayim.common.viewmode.ViewModel;
+import com.ljh.www.saysayim.common.activity.BaseActivity;
 
 /**
  * Created by ljh on 2016/5/25.

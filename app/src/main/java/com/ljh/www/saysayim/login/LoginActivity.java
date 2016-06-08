@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import com.ljh.www.imkit.util.log.LogUtils;
 import com.ljh.www.saysayim.AppCache;
-import com.ljh.www.saysayim.base.BaseActivity;
+import com.ljh.www.saysayim.common.activity.BaseActivity;
 import com.ljh.www.saysayim.main.activity.MainActivity;
 import com.ljh.www.saysayim.R;
 import com.ljh.www.saysayim.preference.Preferences;
-import com.ljh.www.saysayim.util.MD5;
+import com.ljh.www.saysayim.common.util.string.MD5;
 import com.ljh.www.saysayim.widget.ClearableEditViewWithIcon;
 import com.netease.nimlib.sdk.AbortableFuture;
 import com.netease.nimlib.sdk.NIMClient;

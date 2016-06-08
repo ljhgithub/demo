@@ -1,12 +1,7 @@
-package com.ljh.www.saysayim.util;
-
-import android.provider.MediaStore;
-
-import com.ljh.www.imkit.util.log.LogUtils;
+package com.ljh.www.saysayim.common.util.string;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
-import java.util.Arrays;
 
 /**
  * Created by ljh on 2016/5/27.

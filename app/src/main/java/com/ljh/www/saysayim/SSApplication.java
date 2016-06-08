@@ -8,10 +8,11 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import com.ljh.www.imkit.util.log.LogUtils;
+import com.ljh.www.saysayim.data.cache.FriendDataCache;
 import com.ljh.www.saysayim.launch.WelcomeActivity;
 import com.ljh.www.saysayim.preference.Preferences;
-import com.ljh.www.saysayim.util.crash.AppCrashHandler;
-import com.ljh.www.saysayim.util.sys.SystemUtil;
+import com.ljh.www.saysayim.common.util.crash.AppCrashHandler;
+import com.ljh.www.saysayim.common.util.sys.SystemUtil;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
@@ -22,17 +23,12 @@ import com.netease.nimlib.sdk.StatusCode;
 import com.netease.nimlib.sdk.auth.AuthServiceObserver;
 import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.netease.nimlib.sdk.auth.constant.LoginSyncStatus;
-import com.netease.nimlib.sdk.friend.FriendService;
 import com.netease.nimlib.sdk.friend.FriendServiceObserve;
-import com.netease.nimlib.sdk.friend.model.AddFriendNotify;
 import com.netease.nimlib.sdk.friend.model.Friend;
 import com.netease.nimlib.sdk.friend.model.FriendChangedNotify;
 import com.netease.nimlib.sdk.msg.MessageNotifierCustomization;
-import com.netease.nimlib.sdk.msg.SystemMessageObserver;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
-import com.netease.nimlib.sdk.msg.constant.SystemMessageType;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
-import com.netease.nimlib.sdk.msg.model.SystemMessage;
 import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 import com.netease.nimlib.sdk.uinfo.UserService;
 import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
@@ -59,7 +55,6 @@ public class SSApplication extends Application {
         if (inMainProcess()) {
             subscribeOnlineStatusObserver();
             subscribeLoginSyncDataStatusObserver();
-
             subscribeFriendChangedNotify();
         }
     }
@@ -70,7 +65,6 @@ public class SSApplication extends Application {
         LogUtils.LOGD(TAG, packageName + "inMainProcess" + processName);
         return packageName.equals(processName);
     }
-
 
 
     @Override
@@ -151,23 +145,23 @@ public class SSApplication extends Application {
         }, true);
     }
 
-    private void subscribeFriendChangedNotify(){
+    private void subscribeFriendChangedNotify() {
 
         NIMClient.getService(FriendServiceObserve.class).observeFriendChangedNotify(new Observer<FriendChangedNotify>() {
             @Override
             public void onEvent(FriendChangedNotify friendChangedNotify) {
 
-                List<Friend> newFriends=friendChangedNotify.getAddedOrUpdatedFriends();
-                List<String> delFriendAccounts=friendChangedNotify.getDeletedFriends();
-                if (null!=newFriends){
-                    LogUtils.LOGD(TAG,"newFriends"+newFriends.size());
+                List<Friend> newFriends = friendChangedNotify.getAddedOrUpdatedFriends();
+                List<String> delFriendAccounts = friendChangedNotify.getDeletedFriends();
+                if (null != newFriends) {
+                    LogUtils.LOGD(TAG, "newFriends" + newFriends.size());
                 }
-                if (null!=delFriendAccounts){
-                    LogUtils.LOGD(TAG,"delFriendAccounts"+delFriendAccounts.size());
+                if (null != delFriendAccounts) {
+                    LogUtils.LOGD(TAG, "delFriendAccounts" + delFriendAccounts.size());
                 }
 
             }
-        },true);
+        }, true);
     }
 
 

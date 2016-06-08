@@ -1,4 +1,4 @@
-package com.ljh.www.saysayim.util.crash;
+package com.ljh.www.saysayim.common.util.crash;
 
 import android.content.Context;
 

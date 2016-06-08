@@ -1,6 +1,8 @@
-package com.ljh.www.saysayim.base;
+package com.ljh.www.saysayim.common.fragment;
 
 import android.databinding.ViewDataBinding;
+
+import com.ljh.www.saysayim.common.viewmode.ViewModel;
 
 /**
  * Created by ljh on 2016/5/31.

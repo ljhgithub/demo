@@ -1,4 +1,4 @@
-package com.ljh.www.saysayim.base;
+package com.ljh.www.saysayim.common.viewmode;
 
 
 import android.databinding.BaseObservable;

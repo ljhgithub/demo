@@ -1,6 +1,4 @@
-package com.ljh.www.saysayim.util;
-
-import com.ljh.www.imkit.util.log.LogUtils;
+package com.ljh.www.saysayim.common.util.string;
 
 /**
  * Created by ljh on 2016/5/27.

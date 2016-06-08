@@ -1,4 +1,4 @@
-package com.ljh.www.saysayim.util.sys;
+package com.ljh.www.saysayim.common.util.sys;
 
 import android.app.ActivityManager;
 import android.content.Context;

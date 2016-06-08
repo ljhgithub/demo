@@ -2,22 +2,38 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ljh.www.saysayim">
     <!-- 权限声明 -->
-    <uses-permission android:name="android.permission.GET_TASKS" />
     <!-- 访问网络状态-->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- 网络相关 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+
+    <!-- 手机状态 -->
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+
     <!-- 控制呼吸灯，振动器等，用于新消息提醒 -->
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <!-- 外置存储存取权限 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <!-- 多媒体相关 -->
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 读写文件 外置存储存取权限-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <!-- 多媒体 -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
 
     <!-- 如果需要实时音视频通话模块，下面的权限也是必须的。否则，可以不加 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -42,7 +58,7 @@
 
         <meta-data
             android:name="com.netease.nim.appKey"
-            android:value="appkey" />
+            android:value="" />
         <!-- 声明云信后台服务，如需保持后台推送，使用独立进程效果会更好。 -->
         <service
             android:name="com.netease.nimlib.service.NimService"
@@ -84,9 +100,6 @@
             android:name="com.netease.cosine.target.receiver"
             android:value="com.netease.nimlib.service.NimReceiver" />
 
-        <activity android:name=".main.activity.MainActivity">
-
-        </activity>
         <activity
             android:name=".launch.WelcomeActivity"
             android:screenOrientation="portrait"
@@ -96,12 +109,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".login.LoginActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".search.activity.FriendSearchActivity"
-            android:screenOrientation="portrait">
 
-        </activity>
+        <!--主页-->
+        <activity
+            android:name=".main.activity.MainActivity"
+            android:screenOrientation="portrait" />
+
+        <!--登录-->
+        <activity
+            android:name=".login.LoginActivity"
+            android:screenOrientation="portrait" />
+
+        <!--搜索用户-->
+        <activity
+            android:name=".search.activity.FriendSearchActivity"
+            android:screenOrientation="portrait" />
+
+        <!--用户详情-->
+        <activity
+            android:name=".user.activity.UserProfileActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

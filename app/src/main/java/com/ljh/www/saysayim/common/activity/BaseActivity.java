@@ -1,4 +1,4 @@
-package com.ljh.www.saysayim.base;
+package com.ljh.www.saysayim.common.activity;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -17,6 +17,8 @@ import android.widget.TextView;
 import com.ljh.www.imkit.util.log.LogUtils;
 import com.ljh.www.imkit.util.sys.ReflectionUtil;
 import com.ljh.www.saysayim.R;
+import com.ljh.www.saysayim.common.fragment.BaseFragment;
+import com.ljh.www.saysayim.common.viewmode.ViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
