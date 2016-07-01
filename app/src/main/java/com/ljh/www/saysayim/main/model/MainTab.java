@@ -2,7 +2,7 @@ package com.ljh.www.saysayim.main.model;
 
 import com.ljh.www.saysayim.common.fragment.TabBaseFragment;
 import com.ljh.www.saysayim.main.fragment.ContactFragment;
-import com.ljh.www.saysayim.main.fragment.RecentContactFragment;
+import com.ljh.www.saysayim.main.fragment.SessionFragment;
 
 /**
  * Created by ljh on 2016/5/30.
@@ -23,7 +23,7 @@ public class MainTab {
 
     private void defaultTabs() {
         this.fragments = new TabBaseFragment[2];
-        this.fragments[0]=new RecentContactFragment();
+        this.fragments[0]=new SessionFragment();
         this.fragments[1]=new ContactFragment();
         this.titles = new String[]{"会话", "联系人"};
 

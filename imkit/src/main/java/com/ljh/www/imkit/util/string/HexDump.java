@@ -1,4 +1,4 @@
-package com.ljh.www.saysayim.common.util.string;
+package com.ljh.www.imkit.util.string;
 
 /**
  * Created by ljh on 2016/5/27.

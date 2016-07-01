@@ -1,4 +1,4 @@
-package com.ljh.www.saysayim.common.util.string;
+package com.ljh.www.imkit.util.string;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

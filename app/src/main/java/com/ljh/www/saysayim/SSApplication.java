@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.text.TextUtils;
 
+import com.ljh.www.imkit.AppHelper;
 import com.ljh.www.imkit.util.log.LogUtils;
 import com.ljh.www.saysayim.data.cache.FriendDataCache;
 import com.ljh.www.saysayim.launch.WelcomeActivity;
@@ -53,8 +54,10 @@ public class SSApplication extends Application {
         NIMClient.init(this, loginInfo(), options());
         AppCrashHandler.getInstance(this);
         if (inMainProcess()) {
+            AppUtil.init(this);
+            AppHelper.init(this);
+            NIMClient.toggleNotification(true);
             subscribeOnlineStatusObserver();
-            subscribeLoginSyncDataStatusObserver();
             subscribeFriendChangedNotify();
         }
     }
@@ -131,19 +134,6 @@ public class SSApplication extends Application {
         }, true);
     }
 
-    private void subscribeLoginSyncDataStatusObserver() {
-        NIMClient.getService(AuthServiceObserver.class).observeLoginSyncDataStatus(new Observer<LoginSyncStatus>() {
-            @Override
-            public void onEvent(LoginSyncStatus loginSyncStatus) {
-                LogUtils.LOGD(TAG, "loginSyncStatus" + loginSyncStatus);
-                if (loginSyncStatus == LoginSyncStatus.BEGIN_SYNC) {
-                    LogUtils.LOGD(TAG, "login sync data begin");
-                } else if (loginSyncStatus == LoginSyncStatus.SYNC_COMPLETED) {
-                    LogUtils.LOGD(TAG, "login sync data completed");
-                }
-            }
-        }, true);
-    }
 
     private void subscribeFriendChangedNotify() {
 

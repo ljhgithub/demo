@@ -6,27 +6,40 @@ import android.databinding.ViewDataBinding;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.CallSuper;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.ljh.www.imkit.util.log.LogUtils;
 import com.ljh.www.imkit.util.sys.ReflectionUtil;
+import com.ljh.www.saysayim.Manifest;
 import com.ljh.www.saysayim.R;
 import com.ljh.www.saysayim.common.fragment.BaseFragment;
 import com.ljh.www.saysayim.common.viewmode.ViewModel;
+import com.trello.rxlifecycle.ActivityEvent;
+import com.trello.rxlifecycle.ActivityLifecycleProvider;
+import com.trello.rxlifecycle.LifecycleTransformer;
+import com.trello.rxlifecycle.RxLifecycle;
+import com.trello.rxlifecycle.components.RxActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
+import rx.subjects.BehaviorSubject;
+
 /**
  * Created by ljh on 2016/5/25.
  */
-public abstract class BaseActivity<VM extends ViewModel, B extends ViewDataBinding> extends AppCompatActivity {
+public abstract class BaseActivity<VM extends ViewModel, B extends ViewDataBinding> extends AppCompatActivity implements ActivityLifecycleProvider {
 
     private static final String TAG = LogUtils.makeLogTag(BaseActivity.class.getSimpleName());
     public static Handler mHandler;
@@ -35,13 +48,39 @@ public abstract class BaseActivity<VM extends ViewModel, B extends ViewDataBindi
     private VM viewModel;
     private TextView tvTitle;
     private TextView tvOption;
+    private TextView tvBack;
     protected boolean hasTitleBar = true;
+
+    private final BehaviorSubject<ActivityEvent> lifecycleSubject = BehaviorSubject.create();
+
+    @Override
+    @NonNull
+    @CheckResult
+    public final Observable<ActivityEvent> lifecycle() {
+        return lifecycleSubject.asObservable();
+    }
+
+    @Override
+    @NonNull
+    @CheckResult
+    public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull ActivityEvent event) {
+        return RxLifecycle.bindUntilEvent(lifecycleSubject, event);
+    }
+
+    @Override
+    @NonNull
+    @CheckResult
+    public final <T> LifecycleTransformer<T> bindToLifecycle() {
+        return RxLifecycle.bindActivity(lifecycleSubject);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        lifecycleSubject.onNext(ActivityEvent.CREATE);
         destroyed = false;
 //        LogUtils.LOGD(TAG, "activity: " + getClass().getSimpleName() + " onCreate()");
+
     }
 
     public void setHasTitleBar(boolean hasTitleBar) {
@@ -60,6 +99,10 @@ public abstract class BaseActivity<VM extends ViewModel, B extends ViewDataBindi
         return tvOption;
     }
 
+    public TextView getTvBack() {
+        return tvBack;
+    }
+
     public void setBinding(B b) {
         this.binding = b;
         if (hasTitleBar) {
@@ -75,7 +118,9 @@ public abstract class BaseActivity<VM extends ViewModel, B extends ViewDataBindi
     }
 
     public void setTitleLayout() {
-        binding.getRoot().findViewById(R.id.tv_back).setOnClickListener(new View.OnClickListener() {
+
+        tvBack = (TextView) binding.getRoot().findViewById(R.id.tv_back);
+        tvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goBack();
@@ -84,7 +129,6 @@ public abstract class BaseActivity<VM extends ViewModel, B extends ViewDataBindi
         tvTitle = (TextView) binding.getRoot().findViewById(R.id.tv_title);
         tvOption = (TextView) binding.getRoot().findViewById(R.id.tv_option);
         tvOption.setText("");
-        tvOption.setVisibility(View.GONE);
         tvTitle.setText("");
         tvOption.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,23 +165,35 @@ public abstract class BaseActivity<VM extends ViewModel, B extends ViewDataBindi
     }
 
     public void setTitleName(String titleName) {
+        if (TextUtils.isEmpty(titleName)) {
+            tvTitle.setVisibility(View.GONE);
+            return;
+        }
+        tvTitle.setVisibility(View.VISIBLE);
         tvTitle.setText(titleName);
     }
 
     public void setTitleName(int id) {
-        tvTitle.setText(id);
+        setTitleName(getString(id));
+    }
+
+    public void setOption(String option) {
+        if (TextUtils.isEmpty(option)) {
+            tvOption.setVisibility(View.GONE);
+            return;
+        }
+        tvOption.setVisibility(View.VISIBLE);
+        tvOption.setText(option);
+    }
+
+    public void setOption(int id) {
+        setOption(getString(id));
     }
 
     public String getTitleName() {
         return tvTitle.getText().toString();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        destroyed = true;
-//        LogUtils.LOGD(TAG, "activity: " + getClass().getSimpleName() + " onDestroy()");
-    }
 
     protected final Handler getHandler() {
         if (mHandler == null) {
@@ -266,5 +322,42 @@ public abstract class BaseActivity<VM extends ViewModel, B extends ViewDataBindi
 
         }
         return fragment;
+    }
+
+    @Override
+    @CallSuper
+    protected void onStart() {
+        super.onStart();
+        lifecycleSubject.onNext(ActivityEvent.START);
+    }
+
+    @Override
+    @CallSuper
+    protected void onResume() {
+        super.onResume();
+        lifecycleSubject.onNext(ActivityEvent.RESUME);
+    }
+
+    @Override
+    @CallSuper
+    protected void onPause() {
+        lifecycleSubject.onNext(ActivityEvent.PAUSE);
+        super.onPause();
+    }
+
+    @Override
+    @CallSuper
+    protected void onStop() {
+        lifecycleSubject.onNext(ActivityEvent.STOP);
+        super.onStop();
+    }
+
+    @Override
+    @CallSuper
+    protected void onDestroy() {
+        super.onDestroy();
+        lifecycleSubject.onNext(ActivityEvent.DESTROY);
+        destroyed = true;
+//        LogUtils.LOGD(TAG, "activity: " + getClass().getSimpleName() + " onDestroy()");
     }
 }

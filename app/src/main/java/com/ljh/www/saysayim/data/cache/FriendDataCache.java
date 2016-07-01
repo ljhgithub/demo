@@ -73,7 +73,7 @@ public class FriendDataCache {
     /**
      * ****************************** 好友查询接口 ******************************
      */
-    public Friend getFreindByAccount(String account) {
+    public Friend getFriendByAccount(String account) {
 
         if (TextUtils.isEmpty(account)) {
             return null;

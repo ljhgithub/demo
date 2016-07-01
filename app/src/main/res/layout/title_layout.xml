@@ -7,19 +7,19 @@
 
     <TextView
         android:id="@+id/tv_back"
-        android:layout_width="wrap_content"
+        android:layout_width="30dp"
         android:layout_height="match_parent"
         android:drawableLeft="@mipmap/ic_actionbar_white_back"
         android:drawablePadding="5dp"
-        android:gravity="center"
-        android:paddingRight="5dp"
-        android:text="返回" />
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
+        android:layout_toRightOf="@id/tv_back"
+        android:textColor="@color/white"
+        android:visibility="gone"
         android:gravity="center" />
 
     <TextView
@@ -28,6 +28,8 @@
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:gravity="center"
+        android:textColor="@color/white"
+        android:visibility="gone"
         android:paddingRight="8dp" />
 
 </RelativeLayout>

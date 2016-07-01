@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">imkit</string>
+    <string name="eula_legal_text">Your EULA text here.</string>
+    <string name="about_eula">End User License Agreement</string>
+    <string name="ok">OK</string>
 </resources>

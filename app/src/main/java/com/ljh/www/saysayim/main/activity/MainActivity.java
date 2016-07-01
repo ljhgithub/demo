@@ -1,8 +1,14 @@
 package com.ljh.www.saysayim.main.activity;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
+import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
+import android.support.annotation.IntRange;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
@@ -10,20 +16,23 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.ljh.www.imkit.common.dialog.DialogMaker;
 import com.ljh.www.imkit.util.log.LogUtils;
 import com.ljh.www.saysayim.common.activity.BaseActivity;
+import com.ljh.www.saysayim.common.util.im.LoginSyncDataStatusObserver;
 import com.ljh.www.saysayim.common.viewmode.ViewModel;
 import com.ljh.www.saysayim.MainBinding;
 import com.ljh.www.saysayim.R;
 import com.ljh.www.saysayim.data.cache.DataCacheManager;
 import com.ljh.www.saysayim.data.cache.FriendDataCache;
+import com.ljh.www.saysayim.data.provider.FINContact;
+import com.ljh.www.saysayim.data.provider.FINDatabase;
 import com.ljh.www.saysayim.main.adapter.MainSlidingPagerAdapter;
 import com.ljh.www.saysayim.main.model.MainTab;
 import com.ljh.www.saysayim.search.activity.FriendSearchActivity;
 import com.ljh.www.saysayim.viewpager.FadeInOutPageTransformer;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
-import com.netease.nimlib.sdk.friend.FriendService;
 import com.netease.nimlib.sdk.friend.model.AddFriendNotify;
 import com.netease.nimlib.sdk.friend.model.Friend;
 import com.netease.nimlib.sdk.msg.SystemMessageObserver;
@@ -31,10 +40,12 @@ import com.netease.nimlib.sdk.msg.SystemMessageService;
 import com.netease.nimlib.sdk.msg.constant.SystemMessageType;
 import com.netease.nimlib.sdk.msg.model.SystemMessage;
 
+import org.abego.treelayout.internal.util.java.lang.string.StringUtil;
+import org.apache.commons.codec.binary.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import rx.functions.Action1;
+import java.util.Random;
 
 public class MainActivity extends BaseActivity<ViewModel, MainBinding> implements ViewPager.OnPageChangeListener {
     private static final String TAG = LogUtils.makeLogTag(MainActivity.class.getSimpleName());
@@ -50,17 +61,72 @@ public class MainActivity extends BaseActivity<ViewModel, MainBinding> implement
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setBinding(DataBindingUtil.<MainBinding>setContentView(this, R.layout.activity_main));
-        setTitle("main");
+        setTitleName("main");
         initView();
         subscribeReceiveSystemMsg();
         querySystemMsg();
-        DataCacheManager.buildDataCacheAsync(new Action1<String>() {
+        boolean completed = LoginSyncDataStatusObserver.getInstance().observeSyncDataCompletedEvent(new Observer<Void>() {
             @Override
-            public void call(String o) {
-                LogUtils.LOGD(TAG, o + Thread.currentThread().getName());
-                getFriends();
+            public void onEvent(Void aVoid) {
+                LogUtils.LOGD(TAG, "end");
+                DialogMaker.dismissProgress();
             }
         });
+        LogUtils.LOGD(TAG, "end" + completed);
+        if (!completed) {
+            DialogMaker.showProgress(this, getString(R.string.prepare_data));
+        }
+
+//        Observable.interval(1, TimeUnit.SECONDS)
+//                .compose(this.<Long>bindUntilEvent(ActivityEvent.PAUSE))
+//                .subscribe(new Action1<Long>() {
+//            @Override
+//            public void call(Long o) {
+//                LogUtils.LOGD(TAG, "num" + o);
+//            }
+//        });
+        ContentResolver cr = getContentResolver();
+        ContentValues v = new ContentValues();
+//       v.put(FINContact.FundColumns.FUND_ID, com.ljh.www.imkit.util.string.StringUtil.get32UUID());
+//        v.put(FINContact.FundColumns.FUND_CODE, new Random().nextInt());
+//        v.put(FINContact.FundColumns.BUY_PRICE, new Random().nextInt());
+//        v.put(FINContact.FundColumns.SELL_PRICE,new Random().nextInt());
+//        cr.insert(FINContact.Funds.CONTENT_URI, v);
+//        LogUtils.LOGD(TAG, cr.insert(FINContact.Funds.CONTENT_URI, v) + "");
+
+        cr.registerContentObserver(FINContact.Funds.CONTENT_URI, true, new ContentObserver(getHandler()) {
+            @Override
+            public void onChange(boolean selfChange) {
+                LogUtils.LOGD(TAG, "onChange selfChange" + selfChange);
+            }
+        });
+
+//        v.put(FINContact.FundColumns.FUND_CODE, new Random().nextInt());
+//        v.put(FINContact.FundColumns.BUY_PRICE, new Random().nextInt());
+//        v.put(FINContact.FundColumns.SELL_PRICE, new Random().nextInt());
+//        int retVal = cr.update(FINContact.Funds.buildFundUri("8c5e6c17954b4fedad698ae0a9ad99cf"), v, null, null);
+//        LogUtils.LOGD(TAG, "update " + retVal);
+
+        v.put(FINContact.FundColumns.FUND_CODE, new Random().nextInt());
+        v.put(FINContact.FundColumns.BUY_PRICE, new Random().nextInt());
+        v.put(FINContact.FundColumns.SELL_PRICE, new Random().nextInt());
+        Cursor cursor = cr.query(FINContact.Funds.buildFundUri("ab0e23e6c147441bba39c94bd152aa11"), null, null, null, null);
+        while (cursor.moveToNext()) {
+            LogUtils.LOGD(TAG, "query = " + cursor.getString(cursor.getColumnIndex(FINContact.Funds.FUND_ID)));
+        }
+
+        cursor.close();
+    }
+
+
+    public void getFriends() {
+        List<String> myFriendAccounts = FriendDataCache.getInstance().getMyFriendAccount();
+        List<Friend> friends = new ArrayList<>(myFriendAccounts.size());
+        for (String a : myFriendAccounts) {
+            friends.add(FriendDataCache.getInstance().getFriendByAccount(a));
+            LogUtils.LOGD(TAG, FriendDataCache.getInstance().getFriendByAccount(a).getAccount());
+        }
+
     }
 
     private void initView() {
@@ -127,6 +193,10 @@ public class MainActivity extends BaseActivity<ViewModel, MainBinding> implement
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
     public void switchOption(int index) {
         switch (index) {
@@ -169,16 +239,6 @@ public class MainActivity extends BaseActivity<ViewModel, MainBinding> implement
     }
 
 
-    public void getFriends() {
-        List<String> myFriendAccounts = FriendDataCache.getInstance().getMyFriendAccount();
-        List<Friend> friends = new ArrayList<>(myFriendAccounts.size());
-        for (String a : myFriendAccounts) {
-            friends.add(FriendDataCache.getInstance().getFreindByAccount(a));
-            LogUtils.LOGD(TAG, FriendDataCache.getInstance().getFreindByAccount(a).getAccount());
-        }
-
-    }
-
     private void subscribeReceiveSystemMsg() {
         NIMClient.getService(SystemMessageObserver.class).observeReceiveSystemMsg(new Observer<SystemMessage>() {
             @Override
@@ -201,7 +261,7 @@ public class MainActivity extends BaseActivity<ViewModel, MainBinding> implement
                             // 对方请求添加好友，一般场景会让用户选择同意或拒绝对方的好友请求。
                             // 通过message.getContent()获取好友验证请求的附言
                             LogUtils.LOGD(TAG, "对方请求添加好友" + systemMessage.getContent());
-                            NIMClient.getService(FriendService.class).ackAddFriendRequest(attachData.getAccount(), true);
+//                            NIMClient.getService(FriendService.class).ackAddFriendRequest(attachData.getAccount(), true);
                         }
                     }
                 }
@@ -231,7 +291,7 @@ public class MainActivity extends BaseActivity<ViewModel, MainBinding> implement
                             // 对方请求添加好友，一般场景会让用户选择同意或拒绝对方的好友请求。
                             // 通过message.getContent()获取好友验证请求的附言
                             LogUtils.LOGD(TAG, "对方请求添加好友" + systemMessage.getContent());
-                            NIMClient.getService(FriendService.class).ackAddFriendRequest(attachData.getAccount(), true);
+//                            NIMClient.getService(FriendService.class).ackAddFriendRequest(attachData.getAccount(), true);
                         }
                     }
                 }

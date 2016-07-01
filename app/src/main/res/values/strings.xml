@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">demo</string>
+    <string name="prepare_data">正在准备数据...</string>
 </resources>

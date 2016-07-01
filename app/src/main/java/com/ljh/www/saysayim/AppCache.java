@@ -12,6 +12,7 @@ public class AppCache {
 
     public static void setAccount(String account) {
         AppCache.account = account;
+        AppUtil.setAccount(account);
 
     }
 
