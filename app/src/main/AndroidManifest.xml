@@ -58,7 +58,7 @@
 
         <meta-data
             android:name="com.netease.nim.appKey"
-            android:value="019618c9101f2465a3081ae730d7c416" />
+            android:value="xx" />
         <!-- 声明云信后台服务，如需保持后台推送，使用独立进程效果会更好。 -->
         <service
             android:name="com.netease.nimlib.service.NimService"
