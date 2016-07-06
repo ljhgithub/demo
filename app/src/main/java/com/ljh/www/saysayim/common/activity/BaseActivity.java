@@ -149,10 +149,16 @@ public abstract class BaseActivity<VM extends ViewModel, B extends ViewDataBindi
 
     }
 
+    /*
+    *使用databinding是忽略此方法
+     */
     public void setViewModel(VM viewModel) {
         this.viewModel = viewModel;
     }
 
+    /*
+    *使用databinding是忽略此方法
+     */
     public VM getViewModel() {
         if (viewModel == null) {
             throw new NullPointerException("You should setViewModel first!");

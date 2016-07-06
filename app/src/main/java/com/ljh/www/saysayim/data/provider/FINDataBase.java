@@ -3,13 +3,10 @@ package com.ljh.www.saysayim.data.provider;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Color;
 import android.provider.BaseColumns;
 
 import com.ljh.www.imkit.util.log.LogUtils;
 import com.ljh.www.saysayim.data.provider.FINContact.*;
-
-import java.security.acl.LastOwnerException;
 
 /**
  * Created by ljh on 2016/6/30.
@@ -32,6 +29,7 @@ public class FINDatabase extends SQLiteOpenHelper {
         String FUNDS = "funds";
         String SHARES = "shares";
         String FINANCES = "finances";
+        String SHARE_PERCENT="share_percent";
     }
 
     @Override
@@ -63,6 +61,19 @@ public class FINDatabase extends SQLiteOpenHelper {
                 + ShareColumns.SHARE_CODE + " INTEGER NOT NULL,"
                 + ShareColumns.PUBLISH_DATETIME + " TEXT,"
                 + "UNIQUE (" + ShareColumns.SHARE_ID + ") ON CONFLICT REPLACE)");
+
+        db.execSQL("CREATE TABLE " + Tables.SHARE_PERCENT + " ("
+                + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + SharePercentColumns.CODE + " TEXT NOT NULL,"
+                + SharePercentColumns.NAME + " TEXT NOT NULL,"
+                + SharePercentColumns.FUND_NUM + " TEXT,"
+                + SharePercentColumns.TOTAL + " TEXT,"
+                + SharePercentColumns.CHANGE + " TEXT,"
+                + SharePercentColumns.TOTAL_CAP + " TEXT,"
+                + SharePercentColumns.ACC_RATE + " TEXT,"
+                + SharePercentColumns.CHANGE_STATUS + " TEXT,"
+                + SharePercentColumns.TIME + " TEXT,"
+                + "UNIQUE (" + SharePercentColumns.CODE + ") ON CONFLICT REPLACE)");
 
     }
 

@@ -41,7 +41,7 @@
             android:layout_margin="15dip"
             android:background="@drawable/rouned_blue_btn_sel"
             android:minHeight="50dp"
-            android:onClick="@{userProfileVM.onClickAddFriend}"
+            android:onClick="@{userProfileVM::onClickAddFriend}"
             android:text="添加好友"
             android:textColor="@color/white"
             android:textSize="17sp" />

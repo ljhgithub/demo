@@ -1,14 +1,13 @@
 package com.ljh.www.saysayim.main.activity;
 
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.ContentObserver;
-import android.database.Cursor;
+import android.content.OperationApplicationException;
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
-import android.support.annotation.IntRange;
+import android.os.RemoteException;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
@@ -17,18 +16,21 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.ljh.www.imkit.common.dialog.DialogMaker;
+import com.ljh.www.imkit.common.http.RetrofitProvider;
 import com.ljh.www.imkit.util.log.LogUtils;
+import com.ljh.www.saysayim.Config;
 import com.ljh.www.saysayim.common.activity.BaseActivity;
 import com.ljh.www.saysayim.common.util.im.LoginSyncDataStatusObserver;
 import com.ljh.www.saysayim.common.viewmode.ViewModel;
 import com.ljh.www.saysayim.MainBinding;
 import com.ljh.www.saysayim.R;
-import com.ljh.www.saysayim.data.cache.DataCacheManager;
 import com.ljh.www.saysayim.data.cache.FriendDataCache;
 import com.ljh.www.saysayim.data.provider.FINContact;
-import com.ljh.www.saysayim.data.provider.FINDatabase;
+import com.ljh.www.saysayim.data.remote.RemoteDataService;
 import com.ljh.www.saysayim.main.adapter.MainSlidingPagerAdapter;
 import com.ljh.www.saysayim.main.model.MainTab;
+import com.ljh.www.saysayim.main.model.SharePercentModel;
+import com.ljh.www.saysayim.model.JuheRemoteDataSource;
 import com.ljh.www.saysayim.search.activity.FriendSearchActivity;
 import com.ljh.www.saysayim.viewpager.FadeInOutPageTransformer;
 import com.netease.nimlib.sdk.NIMClient;
@@ -40,12 +42,13 @@ import com.netease.nimlib.sdk.msg.SystemMessageService;
 import com.netease.nimlib.sdk.msg.constant.SystemMessageType;
 import com.netease.nimlib.sdk.msg.model.SystemMessage;
 
-import org.abego.treelayout.internal.util.java.lang.string.StringUtil;
-import org.apache.commons.codec.binary.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity<ViewModel, MainBinding> implements ViewPager.OnPageChangeListener {
     private static final String TAG = LogUtils.makeLogTag(MainActivity.class.getSimpleName());
@@ -58,7 +61,7 @@ public class MainActivity extends BaseActivity<ViewModel, MainBinding> implement
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setBinding(DataBindingUtil.<MainBinding>setContentView(this, R.layout.activity_main));
         setTitleName("main");
@@ -85,8 +88,8 @@ public class MainActivity extends BaseActivity<ViewModel, MainBinding> implement
 //                LogUtils.LOGD(TAG, "num" + o);
 //            }
 //        });
-        ContentResolver cr = getContentResolver();
-        ContentValues v = new ContentValues();
+//        ContentResolver cr = getContentResolver();
+//        ContentValues v = new ContentValues();
 //       v.put(FINContact.FundColumns.FUND_ID, com.ljh.www.imkit.util.string.StringUtil.get32UUID());
 //        v.put(FINContact.FundColumns.FUND_CODE, new Random().nextInt());
 //        v.put(FINContact.FundColumns.BUY_PRICE, new Random().nextInt());
@@ -94,28 +97,29 @@ public class MainActivity extends BaseActivity<ViewModel, MainBinding> implement
 //        cr.insert(FINContact.Funds.CONTENT_URI, v);
 //        LogUtils.LOGD(TAG, cr.insert(FINContact.Funds.CONTENT_URI, v) + "");
 
-        cr.registerContentObserver(FINContact.Funds.CONTENT_URI, true, new ContentObserver(getHandler()) {
-            @Override
-            public void onChange(boolean selfChange) {
-                LogUtils.LOGD(TAG, "onChange selfChange" + selfChange);
-            }
-        });
+//        cr.registerContentObserver(FINContact.Funds.CONTENT_URI, true, new ContentObserver(getHandler()) {
+//            @Override
+//            public void onChange(boolean selfChange) {
+//                LogUtils.LOGD(TAG, "onChange selfChange" + selfChange);
+//            }
+//        });
 
 //        v.put(FINContact.FundColumns.FUND_CODE, new Random().nextInt());
 //        v.put(FINContact.FundColumns.BUY_PRICE, new Random().nextInt());
 //        v.put(FINContact.FundColumns.SELL_PRICE, new Random().nextInt());
 //        int retVal = cr.update(FINContact.Funds.buildFundUri("8c5e6c17954b4fedad698ae0a9ad99cf"), v, null, null);
 //        LogUtils.LOGD(TAG, "update " + retVal);
+//
+//        v.put(FINContact.FundColumns.FUND_CODE, new Random().nextInt());
+//        v.put(FINContact.FundColumns.BUY_PRICE, new Random().nextInt());
+//        v.put(FINContact.FundColumns.SELL_PRICE, new Random().nextInt());
+//        Cursor cursor = cr.query(FINContact.Funds.buildFundUri("ab0e23e6c147441bba39c94bd152aa11"), null, null, null, null);
+//        while (cursor.moveToNext()) {
+//            LogUtils.LOGD(TAG, "query = " + cursor.getString(cursor.getColumnIndex(FINContact.Funds.FUND_ID)));
+//        }
+//
+//        cursor.close();
 
-        v.put(FINContact.FundColumns.FUND_CODE, new Random().nextInt());
-        v.put(FINContact.FundColumns.BUY_PRICE, new Random().nextInt());
-        v.put(FINContact.FundColumns.SELL_PRICE, new Random().nextInt());
-        Cursor cursor = cr.query(FINContact.Funds.buildFundUri("ab0e23e6c147441bba39c94bd152aa11"), null, null, null, null);
-        while (cursor.moveToNext()) {
-            LogUtils.LOGD(TAG, "query = " + cursor.getString(cursor.getColumnIndex(FINContact.Funds.FUND_ID)));
-        }
-
-        cursor.close();
     }
 
 

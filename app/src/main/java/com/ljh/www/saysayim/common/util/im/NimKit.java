@@ -1,5 +1,9 @@
 package com.ljh.www.saysayim.common.util.im;
 
+import android.databinding.BindingAdapter;
+import android.graphics.drawable.Drawable;
+import android.widget.ImageView;
+
 import com.ljh.www.imkit.util.log.LogUtils;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.friend.FriendService;
@@ -15,7 +19,6 @@ import java.util.List;
  * Created by ljh on 2016/6/6.
  */
 public class NimKit {
-
     private static final String TAG = LogUtils.makeLogTag(NimKit.class.getSimpleName());
 
     private void queryAddFreindSystemMsg() {

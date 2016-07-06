@@ -20,6 +20,7 @@ public class FINContact {
         String BUY_PRICE = "buy_price";
         String SELL_PRICE = "sell_price";
         String PUBLISH_DATETIME = "publish_datetime";
+
     }
 
     public interface ShareColumns {
@@ -33,7 +34,29 @@ public class FINContact {
         String TOTAL_SUM = "total_sum";
     }
 
+    public interface SharePercentColumns {
+        //        "code":"000002",		/*股票代码*/
+//                "name":"万科A",			/*股票名称*/
+//                "fundnum":"180",		/*持有基金家数*/
+//                "total":"247,221",		/*持股总数（万股）*/
+//                "change":"-42,289",		/*持股变化（和上季度比）*/
+//                "totalcap":"2084074.79",	/*持股总市值（万元）*/
+//                "accrate":"22.52",		/*占该股流通市值比例（%）*/
+//                "changesta":"-3.85",		/*占流通股比例表变化（和上季度比）（%）*/
+//                "time":"20120930"		/*时间*/
+        String CODE = "code";
+        String NAME = "name";
+        String FUND_NUM = "fund_num";
+        String TOTAL = "total";
+        String CHANGE = "change";
+        String TOTAL_CAP = "total_cap";
+        String ACC_RATE = "acc_rate";
+        String CHANGE_STATUS = "change_status";
+        String TIME = "time";
+    }
+
     private static final String PATH_FUNDS = "funds";
+    private static final String PATH_SHARE_PERCENT = "share_percent";
 
     public static class Funds implements BaseColumns, FundColumns {
         public static final String CONTENT_TYPE =
@@ -48,6 +71,24 @@ public class FINContact {
         }
 
         public static String getFundId(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+    }
+
+    public static class SharePercent implements BaseColumns, SharePercentColumns {
+        public static final String CONTENT_TYPE =
+                "vnd.android.cursor.dir/vnd.saysayim.sharepercent";
+        public static final String CONTENT_ITEM_TYPE =
+                "vnd.android.cursor.item/vnd.saysayim.sharepercent";
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_SHARE_PERCENT).build();
+
+        public static Uri buildSharePercentUri(String shareCode) {
+            return CONTENT_URI.buildUpon().appendPath(shareCode).build();
+        }
+
+        public static String getShareCode(Uri uri) {
             return uri.getPathSegments().get(1);
         }
 

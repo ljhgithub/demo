@@ -3,22 +3,21 @@ package com.ljh.www.saysayim.login;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import com.ljh.www.imkit.util.log.LogUtils;
 import com.ljh.www.imkit.util.string.MD5;
 import com.ljh.www.saysayim.AppCache;
+
 import com.ljh.www.saysayim.LoginBinding;
 import com.ljh.www.saysayim.common.activity.BaseActivity;
 import com.ljh.www.saysayim.common.viewmode.ViewModel;
-import com.ljh.www.saysayim.data.cache.DataCacheManager;
-import com.ljh.www.saysayim.data.cache.FriendDataCache;
 import com.ljh.www.saysayim.main.activity.MainActivity;
 import com.ljh.www.saysayim.R;
 import com.ljh.www.saysayim.preference.Preferences;
@@ -28,17 +27,11 @@ import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.auth.AuthService;
 import com.netease.nimlib.sdk.auth.LoginInfo;
-import com.netease.nimlib.sdk.friend.model.Friend;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import rx.functions.Action1;
 
 /**
  * Created by ljh on 2016/5/26.
  */
-public class LoginActivity extends BaseActivity<ViewModel, LoginBinding> {
+public class LoginActivity extends BaseActivity<ViewModel,LoginBinding>{
     private static final String TAG = LogUtils.makeLogTag(LoginActivity.class.getSimpleName());
     ClearableEditViewWithIcon etAccount;
     ClearableEditViewWithIcon etPassword;
@@ -53,8 +46,7 @@ public class LoginActivity extends BaseActivity<ViewModel, LoginBinding> {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        LoginBinding loginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
+        LoginBinding  loginBinding = DataBindingUtil.<LoginBinding>setContentView(this, R.layout.activity_login);
         setBinding(loginBinding);
         Drawable drawable = getResources().getDrawable(R.mipmap.ic_launcher);
         drawable.setBounds(1, 1, 80, 80);
