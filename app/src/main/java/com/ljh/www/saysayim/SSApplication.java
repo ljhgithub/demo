@@ -9,11 +9,10 @@ import android.text.TextUtils;
 
 import com.ljh.www.imkit.AppHelper;
 import com.ljh.www.imkit.util.log.LogUtils;
-import com.ljh.www.saysayim.data.cache.FriendDataCache;
-import com.ljh.www.saysayim.launch.WelcomeActivity;
-import com.ljh.www.saysayim.preference.Preferences;
 import com.ljh.www.saysayim.common.util.crash.AppCrashHandler;
 import com.ljh.www.saysayim.common.util.sys.SystemUtil;
+import com.ljh.www.saysayim.launch.WelcomeActivity;
+import com.ljh.www.saysayim.preference.Preferences;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
@@ -23,7 +22,6 @@ import com.netease.nimlib.sdk.StatusBarNotificationConfig;
 import com.netease.nimlib.sdk.StatusCode;
 import com.netease.nimlib.sdk.auth.AuthServiceObserver;
 import com.netease.nimlib.sdk.auth.LoginInfo;
-import com.netease.nimlib.sdk.auth.constant.LoginSyncStatus;
 import com.netease.nimlib.sdk.friend.FriendServiceObserve;
 import com.netease.nimlib.sdk.friend.model.Friend;
 import com.netease.nimlib.sdk.friend.model.FriendChangedNotify;
@@ -60,6 +58,7 @@ public class SSApplication extends Application {
             subscribeOnlineStatusObserver();
             subscribeFriendChangedNotify();
         }
+
     }
 
     public boolean inMainProcess() {

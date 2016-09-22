@@ -17,6 +17,7 @@ public class RetrofitProvider {
     private static Retrofit retrofit;
     private static OkHttpClient client;
 
+
     public static Retrofit getRetrofit() {
         if (null == retrofit) {
             OkHttpClient client = buildClient();
@@ -34,10 +35,13 @@ public class RetrofitProvider {
     @NonNull
     private static OkHttpClient buildClient() {
         if (null == client) {
+//            File cacheFile=new File(StorageUtils.getDiskCacheFileDirPath())
+//            开启响应数据缓存到文件系统功能 click.cache();
             return new OkHttpClient.Builder()
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .writeTimeout(10, TimeUnit.SECONDS)
                     .readTimeout(10, TimeUnit.SECONDS)
+                    .addInterceptor(new GzipRequestInterceptor())
                     .addInterceptor(new LoggingInterceptor())
                     .build();
         } else {

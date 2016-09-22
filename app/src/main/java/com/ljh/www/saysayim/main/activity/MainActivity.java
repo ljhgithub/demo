@@ -1,36 +1,27 @@
 package com.ljh.www.saysayim.main.activity;
 
-import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.OperationApplicationException;
 import android.databinding.DataBindingUtil;
-import android.os.RemoteException;
-import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.PopupMenu;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.gson.Gson;
 import com.ljh.www.imkit.common.dialog.DialogMaker;
-import com.ljh.www.imkit.common.http.RetrofitProvider;
 import com.ljh.www.imkit.util.log.LogUtils;
-import com.ljh.www.saysayim.Config;
+import com.ljh.www.saysayim.MainBinding;
+import com.ljh.www.saysayim.R;
 import com.ljh.www.saysayim.common.activity.BaseActivity;
 import com.ljh.www.saysayim.common.util.im.LoginSyncDataStatusObserver;
 import com.ljh.www.saysayim.common.viewmode.ViewModel;
-import com.ljh.www.saysayim.MainBinding;
-import com.ljh.www.saysayim.R;
 import com.ljh.www.saysayim.data.cache.FriendDataCache;
-import com.ljh.www.saysayim.data.provider.FINContact;
-import com.ljh.www.saysayim.data.remote.RemoteDataService;
 import com.ljh.www.saysayim.main.adapter.MainSlidingPagerAdapter;
 import com.ljh.www.saysayim.main.model.MainTab;
 import com.ljh.www.saysayim.main.model.SharePercentModel;
-import com.ljh.www.saysayim.model.JuheRemoteDataSource;
 import com.ljh.www.saysayim.search.activity.FriendSearchActivity;
 import com.ljh.www.saysayim.viewpager.FadeInOutPageTransformer;
 import com.netease.nimlib.sdk.NIMClient;
@@ -44,11 +35,6 @@ import com.netease.nimlib.sdk.msg.model.SystemMessage;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity<ViewModel, MainBinding> implements ViewPager.OnPageChangeListener {
     private static final String TAG = LogUtils.makeLogTag(MainActivity.class.getSimpleName());
@@ -79,6 +65,11 @@ public class MainActivity extends BaseActivity<ViewModel, MainBinding> implement
         if (!completed) {
             DialogMaker.showProgress(this, getString(R.string.prepare_data));
         }
+
+        SharePercentModel sharePercentModel = new SharePercentModel();
+        sharePercentModel.code = "222";
+        Gson gson = new Gson();
+        LogUtils.LOGD(TAG, gson.toJson(sharePercentModel));
 
 //        Observable.interval(1, TimeUnit.SECONDS)
 //                .compose(this.<Long>bindUntilEvent(ActivityEvent.PAUSE))

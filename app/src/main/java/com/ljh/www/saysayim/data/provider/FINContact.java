@@ -3,7 +3,6 @@ package com.ljh.www.saysayim.data.provider;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import com.google.common.collect.Lists;
 import com.ljh.www.imkit.util.log.LogUtils;
 
 /**
@@ -66,12 +65,13 @@ public class FINContact {
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_FUNDS).build();
 
-        public static Uri buildFundUri(String fundId) {
-            return CONTENT_URI.buildUpon().appendPath(fundId).build();
+        public static Uri buildFundUri(String fundCode) {
+            return CONTENT_URI.buildUpon().appendPath("id").appendPath(fundCode).build();
         }
 
+
         public static String getFundId(Uri uri) {
-            return uri.getPathSegments().get(1);
+            return uri.getPathSegments().get(2);
         }
 
     }
@@ -84,12 +84,16 @@ public class FINContact {
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_SHARE_PERCENT).build();
 
+        public static Uri buildSharePercentLimitUri(int start, int offset) {
+            return CONTENT_URI.buildUpon().appendPath("limit").appendPath(start + "").appendPath(offset + "").build();
+        }
+
         public static Uri buildSharePercentUri(String shareCode) {
-            return CONTENT_URI.buildUpon().appendPath(shareCode).build();
+            return CONTENT_URI.buildUpon().appendPath("id").appendPath(shareCode).build();
         }
 
         public static String getShareCode(Uri uri) {
-            return uri.getPathSegments().get(1);
+            return uri.getPathSegments().get(2);
         }
 
     }

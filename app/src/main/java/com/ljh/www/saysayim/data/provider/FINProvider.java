@@ -12,7 +12,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
-import com.google.common.collect.Tables;
 import com.ljh.www.imkit.util.log.LogUtils;
 
 import java.util.ArrayList;
@@ -34,6 +33,8 @@ public class FINProvider extends ContentProvider {
     private static final int SHARES_ID = 201;
     private static final int SHARE_PERCENT = 300;
     private static final int SHARE_PERCENT_ID = 301;
+    private static final int SHARE_PERCENT_LIMIT = 302;
+
     @Override
     public boolean onCreate() {
         mOpenHelper = new FINDatabase(getContext());
@@ -59,16 +60,28 @@ public class FINProvider extends ContentProvider {
         final SelectionBuilder builder = buildExpandedSelection(uri, match);
 
         boolean distinct = true;
-        Cursor cursor = builder
-                .where(selection, selectionArgs)
-                .query(db, distinct, projection, sortOrder, null);
-        Context context = getContext();
-        if (null != context) {
-            cursor.setNotificationUri(context.getContentResolver(), uri);
+
+        switch (match) {
+            default: {
+                Cursor cursor = builder
+                        .where(selection, selectionArgs)
+                        .query(db, distinct, projection, sortOrder, null);
+                Context context = getContext();
+                if (null != context) {
+                    cursor.setNotificationUri(context.getContentResolver(), uri);
+                }
+            }
+            case SHARE_PERCENT_LIMIT: {
+                List<String> segments = uri.getPathSegments();
+                return builder.where(selection, selectionArgs)
+                        .query(db, distinct, projection,
+                                sortOrder,segments.get(2)+","+segments.get(3));
+            }
+
         }
-        LogUtils.LOGD(TAG, "query count " + cursor.getCount());
-        return cursor;
+
     }
+
 
     @Nullable
     @Override
@@ -86,11 +99,14 @@ public class FINProvider extends ContentProvider {
             case SHARE_PERCENT:
                 return FINContact.SharePercent.CONTENT_TYPE;
             case SHARE_PERCENT_ID:
-                return FINContact.Funds.CONTENT_ITEM_TYPE;
+                return FINContact.SharePercent.CONTENT_ITEM_TYPE;
+            case SHARE_PERCENT_LIMIT:
+                return FINContact.SharePercent.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
     }
+
 
     @Nullable
     @Override
@@ -160,16 +176,16 @@ public class FINProvider extends ContentProvider {
         String tableName;
         switch (match) {
             case FUNDS: {
-                tableName=FINDatabase.Tables.FUNDS;
+                tableName = FINDatabase.Tables.FUNDS;
                 break;
             }
             case SHARES: {
-                tableName=FINDatabase.Tables.SHARES;
+                tableName = FINDatabase.Tables.SHARES;
                 break;
             }
             case SHARE_PERCENT: {
-                tableName=FINDatabase.Tables.SHARE_PERCENT;
-             break;
+                tableName = FINDatabase.Tables.SHARE_PERCENT;
+                break;
             }
             default: {
                 throw new UnsupportedOperationException("Unknown insert uri: " + uri);
@@ -197,11 +213,12 @@ public class FINProvider extends ContentProvider {
         final String authority = FINContact.CONTENT_AUTHORITY;
 
         matcher.addURI(authority, "funds", FUNDS);
-        matcher.addURI(authority, "funds/*", FUNDS_ID);
+        matcher.addURI(authority, "funds/id/*", FUNDS_ID);
         matcher.addURI(authority, "shares", SHARES);
-        matcher.addURI(authority, "shares/*", SHARES_ID);
+        matcher.addURI(authority, "shares/id/*", SHARES_ID);
         matcher.addURI(authority, "share_percent", SHARE_PERCENT);
-        matcher.addURI(authority, "share_percent/*", SHARE_PERCENT_ID);
+        matcher.addURI(authority, "share_percent/id/*", SHARE_PERCENT_ID);
+        matcher.addURI(authority, "share_percent/limit/*/*", SHARE_PERCENT_LIMIT);
 
         return matcher;
     }
@@ -244,11 +261,10 @@ public class FINProvider extends ContentProvider {
                 return builder.table(FINDatabase.Tables.FUNDS);
             }
             case SHARE_PERCENT: {
-
-//                final List<String> segments = uri.getPathSegments();
-                return builder.table(FINDatabase.Tables.SHARE_PERCENT)
-                        .where(FINContact.SharePercent.FUND_NUM + ">=?", "400");
-//                return builder.table(FINDatabase.Tables.SHARE_PERCENT);
+                return builder.table(FINDatabase.Tables.SHARE_PERCENT);
+            }
+            case SHARE_PERCENT_LIMIT: {
+                return builder.table(FINDatabase.Tables.SHARE_PERCENT);
             }
 //            case BLOCKS_BETWEEN: {
 //                final List<String> segments = uri.getPathSegments();
